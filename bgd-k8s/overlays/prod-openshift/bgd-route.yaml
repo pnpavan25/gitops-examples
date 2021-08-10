@@ -6,7 +6,7 @@ metadata:
     app: bgd
   name: bgd
 spec:
-  host: "bgd-bgd.apps.pavannag-dev.cp.fyre.ibm.com"
+  host: "bgd-prod-bgd.apps.pavannag-dev.cp.fyre.ibm.com"
   port:
     targetPort: 8080
   to:
