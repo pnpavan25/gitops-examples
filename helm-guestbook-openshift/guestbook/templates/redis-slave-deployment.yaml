@@ -47,14 +47,14 @@ spec:
             - name: {{ .Values.redisslave.ports.name }}
               containerPort: {{ .Values.redisslave.ports.containerPort }}
               protocol: TCP
+          {{- with .Values.redisslave.livenessProbe }}
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- with .Values.redisslave.readinessProbe }}
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

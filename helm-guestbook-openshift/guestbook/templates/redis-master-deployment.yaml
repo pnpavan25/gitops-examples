@@ -47,14 +47,14 @@ spec:
             - name: {{ .Values.redismaster.ports.name }}
               containerPort: {{ .Values.redismaster.ports.containerPort }}
               protocol: TCP
+          {{- with .Values.redismaster.livenessProbe }}
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- with .Values.redismaster.readinessProbe }}
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

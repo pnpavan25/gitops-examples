@@ -16,6 +16,9 @@ guestbook:
     tag: v1
   service:
     type: LoadBalancer
+  livenessProbe: {}
+  readinessProbe: {}
+
 
 redismaster:
   name: redis-master
@@ -32,6 +35,9 @@ redismaster:
     tag: 5.0.5
   service:
     type: ClusterIP
+  livenessProbe: {}
+  readinessProbe: {}
+
 
 redisslave:
   name: redis-slave
@@ -48,6 +54,8 @@ redisslave:
     tag: v1
   service:
     type: ClusterIP
+  livenessProbe: {}
+  readinessProbe: {}
 
 
 imagePullSecrets: []

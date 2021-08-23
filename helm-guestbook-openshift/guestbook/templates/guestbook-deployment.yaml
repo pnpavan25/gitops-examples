@@ -47,14 +47,14 @@ spec:
             - name: {{ .Values.guestbook.ports.name }}
               containerPort: {{ .Values.guestbook.ports.containerPort }}
               protocol: TCP
+          {{- with .Values.guestbook.livenessProbe }}
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- with .Values.guestbook.readinessProbe }}
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
