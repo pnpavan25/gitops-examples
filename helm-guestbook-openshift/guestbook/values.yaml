@@ -15,7 +15,7 @@ guestbook:
     pullPolicy: Always
     tag: v1
   service:
-    type: LoadBalancer
+    type: ClusterIP
   livenessProbe: {}
   readinessProbe: {}
 
