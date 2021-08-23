@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.redisslave.name }}
+  labels:
+    {{- include "guestbook.labels" . | nindent 4 }}
+    {{- with .Values.redisslave.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  type: {{ .Values.redisslave.service.type }}
+  ports:
+    - port: {{ .Values.redisslave.ports.containerPort }}
+      targetPort: {{ .Values.redisslave.ports.name }}
+      protocol: TCP
+      name: {{ .Values.redisslave.ports.name }}
+  selector:
+    {{- include "guestbook.selectorLabels" . | nindent 4 }}
+    {{- with .Values.redisslave.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}

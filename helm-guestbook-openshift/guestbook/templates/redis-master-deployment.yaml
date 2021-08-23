@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.redismaster.name }}
+  labels:
+    {{- include "guestbook.labels" . | nindent 4 }}
+    {{- with .Values.redismaster.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.redismaster.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "guestbook.selectorLabels" . | nindent 6 }}
+      {{- with .Values.redismaster.labels }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "guestbook.selectorLabels" . | nindent 8 }}
+        {{- with .Values.redismaster.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "guestbook.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Values.redismaster.name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.redismaster.image.repository }}:{{ .Values.redismaster.image.tag }}"
+          imagePullPolicy: {{ .Values.redismaster.image.pullPolicy }}
+          ports:
+            - name: {{ .Values.redismaster.ports.name }}
+              containerPort: {{ .Values.redismaster.ports.containerPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+          - name: redis-storage
+            mountPath: /data
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - name: redis-storage
+        emptyDir: {}

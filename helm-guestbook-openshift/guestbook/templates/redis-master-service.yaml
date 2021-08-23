@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.redismaster.name }}
+  labels:
+    {{- include "guestbook.labels" . | nindent 4 }}
+    {{- with .Values.redismaster.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  type: {{ .Values.redismaster.service.type }}
+  ports:
+    - port: {{ .Values.redismaster.ports.containerPort }}
+      targetPort: {{ .Values.redismaster.ports.name }}
+      protocol: TCP
+      name: {{ .Values.redismaster.ports.name }}
+  selector:
+    {{- include "guestbook.selectorLabels" . | nindent 4 }}
+    {{- with .Values.redismaster.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}

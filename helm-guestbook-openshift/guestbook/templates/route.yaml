@@ -1,0 +1,20 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    {{- include "guestbook.labels" . | nindent 4 }}
+    {{- with .Values.guestbook.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  name: {{ .Values.guestbook.name }}
+spec:
+  port:
+    targetPort: {{ .Values.guestbook.ports.containerPort }}
+  to:
+    kind: Service
+    name: {{ .Values.guestbook.name }}
+    weight: 100
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: None
+  wildcardPolicy: None
