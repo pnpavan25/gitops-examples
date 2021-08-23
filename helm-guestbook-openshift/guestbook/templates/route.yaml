@@ -14,7 +14,4 @@ spec:
     kind: Service
     name: {{ .Values.guestbook.name }}
     weight: 100
-  tls:
-    termination: passthrough
-    insecureEdgeTerminationPolicy: None
   wildcardPolicy: None
